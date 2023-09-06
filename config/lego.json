@@ -1,0 +1,56 @@
+{
+    "pos_encoding": {
+        "base_resolution": 16,
+        "log2_hashmap_size": 19,
+        "n_features_per_level": 2,
+        "n_levels": 16
+    },
+    "dir_encoding": {
+        "degree": 4,
+        "n_dims_to_encode": 3
+    },
+    "sig_network": {
+        "activation": "ReLU",
+        "n_hidden_layers": 1,
+        "n_neurons": 64
+    },
+    "rgb_network": {
+        "activation": "ReLU",
+        "n_hidden_layers": 2,
+        "n_neurons": 64
+    },
+    "snapshot": {
+        "aabb": {
+            "max": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "min": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        "background_color": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ],
+        "camera": {
+            "matrix": [
+                -0.9999999403953552, 0.0, 0.0, 0.0,
+                0.0, -0.7341099977493286, 0.6790305972099304, 2.737260103225708,
+                0.0, 0.6790306568145752, 0.7341098785400391, 2.959291696548462 
+            ],
+            "camera_angle_x": 0.6911112070083618,
+            "up_dir": [
+                0.0,
+                1.0,
+                0.0
+            ]
+        },
+        "density_grid_size": 128
+    }
+}
