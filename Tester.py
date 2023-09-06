@@ -28,4 +28,4 @@ def resize(path):
 
 
 print(f'PSNR = {round(PSNR_ip(resize("./Output.png"), "./Example/Lego_Ref.png"), 4)}')
-print(f'PSNR Of Python = {round(PSNR("./Example/Lego_NGP.png", "./Example/Lego_Ref.png"), 4)}')
+print(f'PSNR Of Instant-NGP = {round(PSNR("./Example/Lego_NGP.png", "./Example/Lego_Ref.png"), 4)}')

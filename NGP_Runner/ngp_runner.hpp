@@ -30,11 +30,11 @@ public:
     int isOccupy(Vec3f point){
         
         for(int i = 0; i < 3; i++){
-            if (point(i) < aabb_l_vec(i) || point(i) > aabb_r_vec(i)){
+            if (point(i) < 0.0f || point(i) > 1.0f){
                 return 0;
             }
         }
-        Vec3f loc_vec = (point - aabb_l_vec) / size * 128;
+        Vec3f loc_vec = point * 128;
         int index = static_cast<int>(std::floor(loc_vec.x()) * resolution * resolution +
             std::floor(loc_vec.y()) * resolution + std::floor(loc_vec.z()));
         return grid[index];

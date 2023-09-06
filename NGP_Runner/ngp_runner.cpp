@@ -15,7 +15,7 @@ NGP_Runner::Color NGP_Runner::ray_marching(const Ray& ray, float rand_offset) {
         Vec3f pos = ray(t);
         t += NGP_STEP_SIZE;
 
-        if (occupancy_grid->isOccupy(pos * 2 - Vec3f(0.5, 0.5, 0.5))){
+        if (occupancy_grid->isOccupy(pos)){
             Feature hash_encoding_mat = hash_encoding->encode(pos);
             
             Feature sh_encoding_mat = sh_encoding->encode((ray.getDirection() + Vec3f(1, 1, 1)) / 2);

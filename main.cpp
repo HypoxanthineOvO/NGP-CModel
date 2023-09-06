@@ -38,7 +38,7 @@ int main(){
     
     /* Generate Camera and Image */
     std::shared_ptr<Image> img = 
-        std::make_shared<Image>(3200, 3200);
+        std::make_shared<Image>(800, 800);
     std::shared_ptr<Camera> camera =
         std::make_shared<Camera>(
             config.snapshot.camera, img
