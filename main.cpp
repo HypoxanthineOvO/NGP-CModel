@@ -11,6 +11,8 @@
 
 std::string PATH = "./config/lego.json";
 
+std::string NAME = "lego";
+
 int main(){
     /* Load Config */
     Config config;
@@ -51,7 +53,7 @@ int main(){
             config.snapshot.density_grid_size,
             -0.5, 1.5
         );
-    ocgrid->loadParams("./data/OccupancyGrid.txt");
+    ocgrid->loadParams("./data/" + NAME + "/OccupancyGrid.txt");
     
     // // Two MLP
     std::shared_ptr<MLP> sigma_mlp =
@@ -79,17 +81,17 @@ int main(){
             config.dir_encoding
         );
 
-    hashenc->loadParameters("./data/params_hash.txt");
+    hashenc->loadParameters("./data/" + NAME + "/params_hash.txt");
 
     std::ifstream nfin;
     // Open the config file
-    nfin.open("./data/params_7168.txt");
+    nfin.open("./data/" + NAME + "/params_7168.txt");
     float prms_color[7168];
     for(int i = 0; i < 7168; i++) nfin >> prms_color[i];
     color_mlp->load_params(prms_color);
     nfin.close();
     
-    nfin.open("./data/params_3072.txt");
+    nfin.open("./data/" + NAME + "/params_3072.txt");
     float prms_sigma[3072];
     for(int i = 0; i < 3072; i++) nfin >> prms_sigma[i];
     sigma_mlp->load_params(prms_sigma);

@@ -12,7 +12,8 @@ It's more convinient for translate this C Model to RTL code; besides, if you are
 [Xmake](https://xmake.io/#/getting_started)
 
 ### Get the data
-TODO
+- Edit `transform.py`'s main part: `load_msgpack({YOUR PATH})`, then you will find data in `data/{NAME}/`
+- Then, edit the `main.cpp`'s `NAME` variable to your data name.
 
 ### Build and Run this Project
 Run `xmake` to build the project. You may need install some package by input `y`.
@@ -20,4 +21,5 @@ Run `xmake` to build the project. You may need install some package by input `y`
 Then, Run `./Instant-NGP` to run the project.
 
 ## TODO List
-- [ ] Implement an data loader to support `.msgpack` loading
+- [x] Implement an easy data transfer to support `.msgpack` loading.
+- [ ] Implement an json & msgpack loader.

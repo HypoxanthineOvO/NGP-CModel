@@ -5,7 +5,6 @@ Instant-NGP
 .xmake/*
 
 data/*
-*.png
 
 # For CMake
 build/*
