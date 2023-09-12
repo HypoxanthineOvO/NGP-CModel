@@ -14,13 +14,23 @@ public:
         input_size(input_size), output_size(output_size), 
         width(width), depth(num_of_hidden_layer){
             layers.push_back(Weight(input_size, width));
+            num_of_params += input_size * width;
             for(int idx = 1; idx < num_of_hidden_layer; idx++){
                 layers.push_back(Weight(width, width));
+                num_of_params += width * width;
             }
             layers.push_back(Weight(width, output_size));
+            num_of_params += width * output_size;
         }
-    void load_params(float* params);
+    
+    void loadParameters(const std::vector<float>& params);
+    void loadParametersFromFile(std::string path);
+
     Output inference(Input vec);
+
+    int getNumParams(){
+        return num_of_params;
+    }
 
 private:
     int input_size, output_size, width, depth;
@@ -31,6 +41,7 @@ private:
     static float ReLU(float input){
         return std::max(0.0f, input);
     }
+    int num_of_params = 0;
 };
 
 #endif // MLP_HPP_

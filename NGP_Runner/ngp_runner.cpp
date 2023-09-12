@@ -1,7 +1,7 @@
 #include "ngp_runner.hpp"
 #include <iostream>
 #include <fstream>
-
+#include "nlohmann/json.hpp"
 
 NGP_Runner::Color NGP_Runner::ray_marching(const Ray& ray, float rand_offset) {
     /* Ray Marching for each ray */
@@ -68,4 +68,51 @@ void NGP_Runner::run() {
         }
     }
     puts("");
+}
+
+void NGP_Runner::loadParameters(std::string path){
+    using namespace nlohmann;
+    std::ifstream input_msgpack_file(path, std::ios::in | std::ios::binary);
+    json data = json::from_msgpack(input_msgpack_file);
+
+    json::binary_t params = data["snapshot"]["params_binary"];
+
+    int size_hashnet = sig_mlp->getNumParams(), size_rgbnet = color_mlp->getNumParams(),
+        size_hashgrid = hash_encoding->getNumParams();
+    std::vector<float> sig_mlp_params(size_hashnet), color_mlp_params(size_rgbnet),
+        hashgrid_params(size_hashgrid);
+    int num_of_params = params.size();
+    for(int i = 0; i < num_of_params; i += 2){
+        uint32_t value = params[i] | (params[i + 1] << 8);
+        int index = i / 2;
+        float value_float = utils::from_int_to_float16(value);
+        if(index < size_hashnet) {
+            sig_mlp_params[index] = value_float;
+        }
+        else if(index < size_rgbnet + size_hashnet) {
+            color_mlp_params[index - size_hashnet] = value_float;
+        }
+        else {
+            hashgrid_params[index - size_hashnet - size_rgbnet] = value_float;
+        }
+    }
+    
+    sig_mlp->loadParameters(sig_mlp_params);
+    color_mlp->loadParameters(color_mlp_params);
+    hash_encoding->loadParameters(hashgrid_params);
+
+    json::binary_t density_grid_params = data["snapshot"]["density_grid_binary"];
+
+    int num_of_params_ocgrid = density_grid_params.size();
+    int size_ocgrid = occupancy_grid->getNumParams(), resolution = occupancy_grid->getResolution();
+
+    std::vector<int> oc_params(size_ocgrid, 0);
+    for(int i = 0; i < num_of_params_ocgrid; i += 2){
+        uint32_t value = density_grid_params[i] | (density_grid_params[i + 1] << 8);
+        float value_float = utils::from_int_to_float16(value);
+        int index = utils::inv_morton(i / 2, resolution);
+        if(value_float > 0.01) oc_params[index] = 1;
+        else oc_params[index] = 0;
+    }
+    occupancy_grid->loadParameters(oc_params);
 }

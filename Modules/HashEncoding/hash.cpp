@@ -1,6 +1,6 @@
 #include "hash.hpp"
 
-void HashEncoding::loadParameters(std::string file){
+void HashEncoding::loadParametersFromFile(std::string file){
     std::ifstream f(file);
     int idx = 0;
     for (int level = 0; level < n_levels; level++){
@@ -10,6 +10,22 @@ void HashEncoding::loadParameters(std::string file){
                 float value;
                 f >> value;
                 feat(feat_cnt) = value;
+                idx++;
+            }
+            layers[level]->loadParameters(
+                num_feature_pairs, feat
+            );
+        }
+    }
+}
+
+void HashEncoding::loadParameters(const std::vector<float>& params){
+    int idx = 0;
+    for (int level = 0; level < n_levels; level++){
+        for(int num_feature_pairs = 0; num_feature_pairs < sizes[level]; num_feature_pairs++){
+            VecXf feat(n_feature_per_level);
+            for(int feat_cnt = 0; feat_cnt < n_feature_per_level; feat_cnt++){
+                feat(feat_cnt) = params[idx];
                 idx++;
             }
             layers[level]->loadParameters(

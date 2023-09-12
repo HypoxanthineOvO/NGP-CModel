@@ -22,4 +22,5 @@ Then, Run `./Instant-NGP` to run the project.
 
 ## TODO List
 - [x] Implement an easy data transfer to support `.msgpack` loading.
-- [ ] Implement an json & msgpack loader.
+- [x] Implement an json & msgpack loader.
+- [ ] Implement an original json loading support.

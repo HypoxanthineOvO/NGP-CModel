@@ -17,18 +17,18 @@ public:
     }
 
     VecXf getFeature(Vec3i vertex, float non_hashing_resolution = 0.0){
-    int x = vertex.x(), y = vertex.y(), z = vertex.z();
-    
-    int index;
-    if(non_hashing_resolution == 0.0){
-        // Do Index_Hash
-        index = (((x * 1) ^ (y * 2654435761) ^ (z * 805459861)) % size + size) % size;      
-    }
-    else{
-        int int_scale = static_cast<int>(non_hashing_resolution);
-        index = (x + y * int_scale + z * int_scale * int_scale) % size;
-    }
-    return table[index];
+        int x = vertex.x(), y = vertex.y(), z = vertex.z();
+        
+        int index;
+        if(non_hashing_resolution == 0.0){
+            // Do Index_Hash
+            index = (((x * 1) ^ (y * 2654435761) ^ (z * 805459861)) % size + size) % size;      
+        }
+        else{
+            int int_scale = static_cast<int>(non_hashing_resolution);
+            index = (x + y * int_scale + z * int_scale * int_scale) % size;
+        }
+        return table[index];
     }
 private:
     long long size;
@@ -62,22 +62,26 @@ public:
                 layers.push_back(std::make_shared<HashTable>(num_of_features, n_feature_per_level));
                 total_features += num_of_features;
             }
-            
+            total_parameters = static_cast<int>(total_features * n_feature_per_level);
         };
-    void loadParameters(std::string file);
+    void loadParametersFromFile(std::string file);
+    void loadParameters(const std::vector<float>& params);
 
     VecXf encode(Vec3f point);
 
     explicit HashEncoding(const Config::Pos_encoding config):
         HashEncoding(config.n_features_per_level, config.base_resolution, 
             config.log2_hashmap_size, config.n_levels){};
-        
+    int getNumParams(){
+        return total_parameters;
+    }
 
 private:
     int n_feature_per_level;
     int base_resolution;
     int log2_hashtable_size;
     int n_levels;
+    int total_parameters;
     float per_level_scale;
     std::vector<std::shared_ptr<HashTable>> layers;
     std::vector<int> sizes;

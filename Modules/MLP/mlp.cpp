@@ -1,9 +1,19 @@
 #include "mlp.hpp"
-#include<iostream>
+#include <iostream>
+#include <fstream>
 
-void MLP::load_params(float* params){
+void MLP::loadParametersFromFile(std::string path){
+    std::ifstream nfin(path);
+    std::vector<float> params(num_of_params);
+    for(int i = 0; i < num_of_params; i++){
+        nfin >> params[i];
+    }
+    loadParameters(params);
+}
+
+void MLP::loadParameters(const std::vector<float>& params){
     int idx = 0;
-    // Input-Hidden
+    // Input-Hiddens
     for(int c = 0; c < layers[0].cols(); c++){
         for(int r = 0; r < layers[0].rows(); r++){
             layers[0](r, c) = params[idx++];

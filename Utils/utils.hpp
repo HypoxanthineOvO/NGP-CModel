@@ -38,6 +38,41 @@ namespace utils {
 		return output;
 	}
 
+	static inline uint32_t as_uint(const float x){
+		return *(uint32_t*)(&x);
+	}
+
+	static inline float as_float(const uint32_t x) {
+		return *(float*)&x;
+	}
+
+	static float from_int_to_float16(const uint32_t& x){
+		const uint32_t exponent = (x & 0x7C00) >> 10,
+			mantissa = (x & 0x03FF) << 13,
+			v = as_uint((float)(mantissa)) >> 23;
+			return as_float(
+				(x&0x8000)<<16 | 
+				(exponent != 0)*((exponent + 112) << 23 | mantissa) |
+				((exponent == 0)&(mantissa != 0)) * ((v - 37) << 23|((mantissa << (150-v)) & 0x007FE000)));
+	}
+
+	static inline int inv_Part_1_By_2(int x){
+			x = ((x >> 2) | x) & 0x030C30C3;
+			x = ((x >> 4) | x) & 0x0300F00F;
+			x = ((x >> 8) | x) & 0x030000FF;
+			x = ((x >>16) | x) & 0x000003FF;
+			return x;
+	}
+
+
+	static int inv_morton(int input, int resolution){
+		int x = inv_Part_1_By_2(input &        0x09249249);
+		int y = inv_Part_1_By_2((input >> 1) & 0x09249249);
+		int z = inv_Part_1_By_2((input >> 2) & 0x09249249);
+		
+		return x * resolution * resolution + y * resolution + z;
+	}
+
 }
 
 class Sampler {

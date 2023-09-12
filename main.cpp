@@ -53,9 +53,8 @@ int main(){
             config.snapshot.density_grid_size,
             -0.5, 1.5
         );
-    ocgrid->loadParams("./data/" + NAME + "/OccupancyGrid.txt");
-    
-    // // Two MLP
+
+    // Two MLP
     std::shared_ptr<MLP> sigma_mlp =
         std::make_shared<MLP>(
             32, // Input size
@@ -81,26 +80,19 @@ int main(){
             config.dir_encoding
         );
 
-    hashenc->loadParameters("./data/" + NAME + "/params_hash.txt");
-
-    std::ifstream nfin;
-    // Open the config file
-    nfin.open("./data/" + NAME + "/params_7168.txt");
-    float prms_color[7168];
-    for(int i = 0; i < 7168; i++) nfin >> prms_color[i];
-    color_mlp->load_params(prms_color);
-    nfin.close();
+    // hashenc->loadParametersFromFile("./data/" + NAME + "/params_hash.txt");
     
-    nfin.open("./data/" + NAME + "/params_3072.txt");
-    float prms_sigma[3072];
-    for(int i = 0; i < 3072; i++) nfin >> prms_sigma[i];
-    sigma_mlp->load_params(prms_sigma);
-    nfin.close();
+    // color_mlp->loadParametersFromFile("./data/" + NAME + "/params_7168.txt");
+    
+    // sigma_mlp->loadParametersFromFile("./data/" + NAME + "/params_3072.txt");
 
+    // ocgrid->loadParametersFromFile("./data/" + NAME + "/OccupancyGrid.txt");
+    
     // Final NGP Runner
     NGP_Runner ngp_runner(
         camera, ocgrid, sigma_mlp, color_mlp, hashenc, shenc
     );
+    ngp_runner.loadParameters("./data/lego.msgpack");
 
     /* Run Instant NGP */
     ngp_runner.run();
