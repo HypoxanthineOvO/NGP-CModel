@@ -11,6 +11,7 @@
 
 std::string PATH = "./config/lego.json";
 
+const int RESOLITION = 800;
 std::string NAME = "lego";
 
 int main(){
@@ -40,7 +41,7 @@ int main(){
     
     /* Generate Camera and Image */
     std::shared_ptr<Image> img = 
-        std::make_shared<Image>(800, 800);
+        std::make_shared<Image>(RESOLITION, RESOLITION);
     std::shared_ptr<Camera> camera =
         std::make_shared<Camera>(
             config.snapshot.camera, img
@@ -79,20 +80,11 @@ int main(){
         std::make_shared<SHEncoding>(
             config.dir_encoding
         );
-
-    // hashenc->loadParametersFromFile("./data/" + NAME + "/params_hash.txt");
-    
-    // color_mlp->loadParametersFromFile("./data/" + NAME + "/params_7168.txt");
-    
-    // sigma_mlp->loadParametersFromFile("./data/" + NAME + "/params_3072.txt");
-
-    // ocgrid->loadParametersFromFile("./data/" + NAME + "/OccupancyGrid.txt");
-    
-    // Final NGP Runner
+    // NGP Runner
     NGP_Runner ngp_runner(
         camera, ocgrid, sigma_mlp, color_mlp, hashenc, shenc
     );
-    ngp_runner.loadParameters("./data/lego.msgpack");
+    ngp_runner.loadParameters("./snapshots/" + NAME + ".msgpack");
 
     /* Run Instant NGP */
     ngp_runner.run();
