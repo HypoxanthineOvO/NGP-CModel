@@ -4,81 +4,64 @@
 #include <string>
 
 #include "image.hpp"
-#include "config.hpp"
-#include "config_io.hpp"
 #include "ngp_runner.hpp"
 
 
-std::string PATH = "./config/lego.json";
+std::string PATH = "./config/base.json";
 
 const int RESOLITION = 800;
 std::string NAME = "lego";
+std::string DATA_PATH = "./data/nerf_synthetic/" + NAME + "/";
 
-int main(){
-    /* Load Config */
-    Config config;
+int main(int argc, char* argv[]){
+    if (argc > 1){
+        NAME = argv[1];
+    }
+
+    nlohmann::json configs, camera_configs;
+    
     std::ifstream fin;
-    // Open the config file
     fin.open(PATH);
-    if(!fin.is_open()){
-        std::cerr << "Failed to open config file: " << PATH << std::endl;
-        exit(0);
-    }
-    // Try to load config into config object and handle exceptions
-    try{
-        nlohmann::json j;
-        fin >> j;
-        nlohmann::from_json(j, config);
-        fin.close();
-    }
-    catch(nlohmann::json::exception& ex){
-        fin.close();
-        std::cerr << "Error: " << ex.what() << std::endl;
-        exit(-1);
-    }
-    std::cout << "Successfully loaded config file: " << PATH << std::endl;
-    // ShowConfigInfo(config);
+    fin >> configs;
+    fin.close();
+
+    fin.open(DATA_PATH + "transforms_test.json");
+    fin >> camera_configs;
+    fin.close();
+
     
     /* Generate Camera and Image */
     std::shared_ptr<Image> img = 
         std::make_shared<Image>(RESOLITION, RESOLITION);
     std::shared_ptr<Camera> camera =
         std::make_shared<Camera>(
-            config.snapshot.camera, img
+            camera_configs, img
         );
 
     
     /* Generate NGP Runner */
     std::shared_ptr<OccupancyGrid> ocgrid =
         std::make_shared<OccupancyGrid>(
-            config.snapshot.density_grid_size,
-            -0.5, 1.5
+            128, -0.5, 1.5
         );
-
     // Two MLP
     std::shared_ptr<MLP> sigma_mlp =
         std::make_shared<MLP>(
-            32, // Input size
-            16, // Output size
-            config.sig_network.n_hidden_layers, // Number of hidden layers
-            config.sig_network.n_neurons // Number of neurons
+            32, 16, configs.at("network")
         );
     std::shared_ptr<MLP> color_mlp =
         std::make_shared<MLP>(
-            32, // Input size
-            16, // Output size
-            config.rgb_network.n_hidden_layers, // Number of layers
-            config.rgb_network.n_neurons // Number of neurons
+            32, 16, configs.at("rgb_network")
         );
     // Hash Encoding
     std::shared_ptr<HashEncoding> hashenc =
         std::make_shared<HashEncoding>(
-            config.pos_encoding
+            configs.at("encoding")
         );
     // SH Encoding
     std::shared_ptr<SHEncoding> shenc =
         std::make_shared<SHEncoding>(
-            config.dir_encoding
+            configs.at("dir_encoding").at("nested")[0]
         );
     // NGP Runner
     NGP_Runner ngp_runner(

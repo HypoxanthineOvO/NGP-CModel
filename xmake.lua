@@ -18,16 +18,16 @@ target("NGP_Runner")
     add_includedirs({
         "Modules/Camera",
         "Modules/HashEncoding",
-        "Modules/IO/Config", "Modules/IO/Image",
         "Modules/MLP",
-        "Modules/SHEncoding"
+        "Modules/SHEncoding",
+        "Utils/Image"
         }, {public = true}
     )
     add_files({
         "Modules/Camera/*.cpp",
         "Modules/HashEncoding/*.cpp",
         "Modules/MLP/*.cpp",
-        "Modules/IO/Image/image.cpp",
+        "Utils/Image/image.cpp",
         "Modules/SHEncoding/*.cpp",
         "NGP_Runner/*.cpp"
     })

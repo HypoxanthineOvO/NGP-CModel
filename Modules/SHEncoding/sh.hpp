@@ -4,17 +4,20 @@
 #include <vector>
 
 #include "core.hpp"
-#include "config.hpp"
+#include "utils.hpp"
 
 class SHEncoding{
 public:
     using Direction = Eigen::Vector3f;
     using Feature = Eigen::VectorXf;
     SHEncoding() = delete;
+    SHEncoding(const nlohmann::json& configs):
+    SHEncoding(
+        utils::get_int_from_json(configs, "degree"),
+        utils::get_int_from_json(configs, "n_dims_to_encode")
+    ){}
     SHEncoding(int degree, int n_dims_to_encode):
         degree(degree), n_dims_to_encode(n_dims_to_encode){};
-    SHEncoding(const Config::Dir_encoding& config):
-        degree(config.degree), n_dims_to_encode(config.n_dims_to_encode){};
     Feature encode(Direction dir);
 
     // Get Output Dimension

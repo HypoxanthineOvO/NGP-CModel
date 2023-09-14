@@ -13,13 +13,11 @@ void MLP::loadParametersFromFile(std::string path){
 
 void MLP::loadParameters(const std::vector<float>& params){
     int idx = 0;
-    // Input-Hiddens
     for(int c = 0; c < layers[0].cols(); c++){
         for(int r = 0; r < layers[0].rows(); r++){
             layers[0](r, c) = params[idx++];
         }
     }
-
     for(int j = 1; j < depth; j++){
         for(int c = 0; c < layers[j].cols(); c++){
             for(int r = 0; r < layers[j].rows(); r++){

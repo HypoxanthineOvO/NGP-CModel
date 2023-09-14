@@ -76,7 +76,7 @@ void NGP_Runner::loadParameters(std::string path){
     json data = json::from_msgpack(input_msgpack_file);
 
     json::binary_t params = data["snapshot"]["params_binary"];
-
+    
     int size_hashnet = sig_mlp->getNumParams(), size_rgbnet = color_mlp->getNumParams(),
         size_hashgrid = hash_encoding->getNumParams();
     std::vector<float> sig_mlp_params(size_hashnet), color_mlp_params(size_rgbnet),
@@ -96,11 +96,11 @@ void NGP_Runner::loadParameters(std::string path){
             hashgrid_params[index - size_hashnet - size_rgbnet] = value_float;
         }
     }
-    
+    hash_encoding->loadParameters(hashgrid_params);
     sig_mlp->loadParameters(sig_mlp_params);
     color_mlp->loadParameters(color_mlp_params);
-    hash_encoding->loadParameters(hashgrid_params);
-
+    
+    
     json::binary_t density_grid_params = data["snapshot"]["density_grid_binary"];
 
     int num_of_params_ocgrid = density_grid_params.size();

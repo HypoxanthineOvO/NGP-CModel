@@ -2,6 +2,7 @@
 #define MLP_HPP_
 
 #include "core.hpp"
+#include "utils.hpp"
 
 class MLP {
 public:
@@ -22,6 +23,10 @@ public:
             layers.push_back(Weight(width, output_size));
             num_of_params += width * output_size;
         }
+    explicit MLP(int input_size, int output_size, const nlohmann::json& configs):
+        MLP(input_size, output_size, 
+            utils::get_int_from_json(configs, "n_hidden_layers"),
+            utils::get_int_from_json(configs, "n_neurons")){}
     
     void loadParameters(const std::vector<float>& params);
     void loadParametersFromFile(std::string path);

@@ -3,7 +3,7 @@
 
 #include <vector>
 #include "core.hpp"
-#include "config.hpp"
+#include "utils.hpp"
 #include <fstream>
 
 // One Layer of Multi-Hash
@@ -38,6 +38,13 @@ private:
 
 class HashEncoding {
 public:
+
+    explicit HashEncoding(const nlohmann::json& configs):
+    HashEncoding(
+        utils::get_int_from_json(configs, "n_features_per_level"), 
+        utils::get_int_from_json(configs, "base_resolution"), 
+        utils::get_int_from_json(configs, "log2_hashmap_size"),
+        utils::get_int_from_json(configs, "n_levels")){}
     explicit HashEncoding(
         int n_feature_per_level, int base_resolution, int log2_hashtable_size, 
             int n_levels, float per_level_scale = 1.38191288):
@@ -69,9 +76,6 @@ public:
 
     VecXf encode(Vec3f point);
 
-    explicit HashEncoding(const Config::Pos_encoding config):
-        HashEncoding(config.n_features_per_level, config.base_resolution, 
-            config.log2_hashmap_size, config.n_levels){};
     int getNumParams(){
         return total_parameters;
     }

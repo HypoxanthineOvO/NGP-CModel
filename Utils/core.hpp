@@ -7,6 +7,8 @@
 #include <memory> // It's for Ubuntu and other Linux OS using GCC
 #include <iostream>
 
+#include "nlohmann/json.hpp"
+
 using Vec2f = Eigen::Vector2f;
 using Vec2i = Eigen::Vector2i;
 

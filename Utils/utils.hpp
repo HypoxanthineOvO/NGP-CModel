@@ -73,6 +73,18 @@ namespace utils {
 		return x * resolution * resolution + y * resolution + z;
 	}
 
+	static Mat4f nerf_matrix_to_ngp(MatXf pose, float scale = 0.33, Vec3f offset = Vec3f(0.5, 0.5, 0.5)){
+		Mat4f out_mat;
+		out_mat << pose(1, 0) , -pose(1, 1) , -pose(1, 2) , pose(1, 3) * scale + offset(0) , \
+			pose(2, 0) , -pose(2, 1) , -pose(2, 2) , pose(2, 3) * scale + offset(1) , \
+			pose(0, 0) , -pose(0, 1) , -pose(0, 2) , pose(0, 3) * scale + offset(2) ,\
+			0 , 0 , 0 , 1;
+		return out_mat;
+	}
+	static int get_int_from_json(const nlohmann::json& config, std::string name){
+		int value;
+		return config.at(name).get_to(value);
+	}
 }
 
 class Sampler {
