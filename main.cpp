@@ -21,9 +21,11 @@ int main(int argc, char* argv[]){
     nlohmann::json configs, camera_configs;
     
     std::ifstream fin;
+    std::cout << "Read Config From" << PATH << std::endl;
     fin.open(PATH);
     fin >> configs;
     fin.close();
+
 
     fin.open(DATA_PATH + "transforms_test.json");
     fin >> camera_configs;
@@ -67,7 +69,7 @@ int main(int argc, char* argv[]){
     NGP_Runner ngp_runner(
         camera, ocgrid, sigma_mlp, color_mlp, hashenc, shenc
     );
-    ngp_runner.loadParameters("./snapshots/" + NAME + ".msgpack");
+    ngp_runner.loadParameters("./snapshots/BigData/" + NAME + ".msgpack");
 
     /* Run Instant NGP */
     ngp_runner.run();

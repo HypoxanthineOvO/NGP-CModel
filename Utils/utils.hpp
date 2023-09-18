@@ -85,6 +85,15 @@ namespace utils {
 		int value;
 		return config.at(name).get_to(value);
 	}
+
+	static inline float min(float v1, float v2){
+		if (v1 < v2) return v1;
+		else return v2;
+	}
+	static inline float max(float v1, float v2){
+		if (v1 > v2) return v1;
+		else return v2;
+	}
 }
 
 class Sampler {

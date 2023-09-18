@@ -5,9 +5,12 @@ Instant-NGP
 .xmake/*
 
 data/*
+Example/*
+*.msgpack
 Output.png
 # For CMake
 build/*
+*.cpython
 
 # Prerequisites
 *.d

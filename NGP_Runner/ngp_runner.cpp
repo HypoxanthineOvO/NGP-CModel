@@ -3,13 +3,33 @@
 #include <fstream>
 #include "nlohmann/json.hpp"
 
+void NGP_Runner::run() {
+    Vec2i resolution = camera->getImage()->getResolution();
+    int cnt = 0, tot_pixel = resolution.x() * resolution.y();
+    #pragma omp parallel for shared(cnt) num_threads(24)
+    for(int dy = 0; dy < resolution.y(); dy++){
+        for(int dx = 0; dx < resolution.x(); dx++){
+            #pragma omp atomic
+            printf("\r%.02f%%",  static_cast<float>(100 * cnt / tot_pixel));
+            ++cnt;
+            NGP_Runner::Color color(0, 0, 0);
+            float dx_f = static_cast<float>(dx), dy_f = static_cast<float>(dy);
+            Ray ray = camera->generateRay(dx_f, dy_f);
+            color += ray_marching(ray);
+            camera->getImage()->setPixel(dx, resolution.y() - 1 - dy, color);
+        }
+    }
+    puts("");
+}
+
 NGP_Runner::Color NGP_Runner::ray_marching(const Ray& ray, float rand_offset) {
     /* Ray Marching for each ray */
     Color color(0, 0, 0);
     float opacity = 0.0f;
     float t0 = ray.getTMin() + rand_offset, t1 = ray.getTMax();
     
-    float t = t0;
+    float t = t0; //get_initial_t(ray);
+    if (t < -1e4) return color;
 
     while(t < t1){
         Vec3f pos = ray(t);
@@ -50,26 +70,25 @@ NGP_Runner::Color NGP_Runner::ray_marching(const Ray& ray, float rand_offset) {
     return color;
 }
 
-void NGP_Runner::run() {
-    Vec2i resolution = camera->getImage()->getResolution();
-    int cnt = 0, tot_pixel = resolution.x() * resolution.y();
-    #pragma omp parallel for shared(cnt) num_threads(24)
-    for(int dy = 0; dy < resolution.y(); dy++){
-        
-        for(int dx = 0; dx < resolution.x(); dx++){
-            #pragma omp atomic
-            printf("\r%.02f%%",  static_cast<float>(100 * cnt / tot_pixel));
-            ++cnt;
-            NGP_Runner::Color color(0, 0, 0);
-            float dx_f = static_cast<float>(dx), dy_f = static_cast<float>(dy);
-            Ray ray = camera->generateRay(dx_f, dy_f);
-            color += ray_marching(ray);
-            camera->getImage()->setPixel(dx, resolution.y() - 1 - dy, color);
-        }
-    }
-    puts("");
+float NGP_Runner::get_initial_t(const Ray& r){
+    // Occupancy Grid: (-0.5)^3 ~ (1.5)^3
+    float tx1 = (1.5 - r.getOrigin().x()) / r.getDirection().x(),
+        tx2 = (-0.5 - r.getOrigin().x()) / r.getDirection().x(),
+        ty1 = (1.5 - r.getOrigin().y()) / r.getDirection().y(),
+        ty2 = (-0.5 - r.getOrigin().y()) / r.getDirection().y(),
+        tz1 = (1.5 - r.getOrigin().z()) / r.getDirection().z(),
+        tz2 = (-0.5 - r.getOrigin().z()) / r.getDirection().z();
+    float tx_min = utils::min(tx1, tx2), tx_max = utils::max(tx1, tx2),
+    ty_min = utils::min(ty1, ty2), ty_max = utils::max(ty1, ty2),
+    tz_min = utils::min(tz1, tz2), tz_max = utils::max(tz1, tz2);
+
+    float t_enter = utils::max(utils::max(tx_min, ty_min), tz_min),
+        t_exit = utils::min(utils::min(tx_max, ty_max), tz_max);
+    if ((t_enter < t_exit) && (t_exit >= 0)) return t_enter;
+    else return -10086.0f;
 }
 
+/* Data Loader */
 void NGP_Runner::loadParameters(std::string path){
     using namespace nlohmann;
     std::ifstream input_msgpack_file(path, std::ios::in | std::ios::binary);

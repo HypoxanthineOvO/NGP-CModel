@@ -85,6 +85,8 @@ public:
     void loadParameters(std::string path);
 
     Color ray_marching(const Ray& ray, float rand_offset = 0.0f);
+    // Utils for ray marching
+    float get_initial_t(const Ray& ray);
     void run();
     void writeImage(){
         camera->getImage()->writeImgToFile("./Output.png");
@@ -98,5 +100,7 @@ private:
     std::shared_ptr<HashEncoding> hash_encoding;
     std::shared_ptr<SHEncoding> sh_encoding;
 };
+
+
 
 #endif // NGP_RUNNER_HPP_
