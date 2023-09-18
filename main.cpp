@@ -17,18 +17,19 @@ int main(int argc, char* argv[]){
     if (argc > 1){
         NAME = argv[1];
     }
-    DATA_PATH = "./data/nerf_synthetic/" + NAME + "/";
+    DATA_PATH = "./data/nerf_synthetic/" + NAME + "/" + "transforms_test.json";
 
     nlohmann::json configs, camera_configs;
     
     std::ifstream fin;
-    std::cout << "Read Config From" << PATH << std::endl;
     fin.open(PATH);
+    std::cout << "Read Config From " << PATH << std::endl;
     fin >> configs;
     fin.close();
 
 
-    fin.open(DATA_PATH + "transforms_test.json");
+    fin.open(DATA_PATH);
+    std::cout << "Reading Camera Config From " << std::endl;
     fin >> camera_configs;
     fin.close();
 
