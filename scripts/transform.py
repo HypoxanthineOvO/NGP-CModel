@@ -37,7 +37,7 @@ def inv_morton(input:np.ndarray):
     return np.stack([x,y,z], dim = -1)
 
     
-def load_msgpack(path: str, out_path: str = None):
+def transform_msgpack(path: str, out_path: str = None):
     res = {}
     # Set File Path
     assert (os.path.isfile(path))
@@ -89,6 +89,3 @@ def load_msgpack(path: str, out_path: str = None):
     np.savetxt(os.path.join(out_path, "params_7168.txt"), rgb_params_network, fmt = "%.8f")
     ## Occupancygrid
     np.savetxt(os.path.join(out_path, "OccupancyGrid.txt"), grid, fmt = "%d")
-    
-if __name__ == "__main__":
-    load_msgpack("./chair.msgpack")
