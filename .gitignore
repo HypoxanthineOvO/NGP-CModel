@@ -4,6 +4,7 @@ Instant-NGP
 .vscode/*
 .xmake/*
 
+drafts/*
 data/*
 Example/*
 *.msgpack

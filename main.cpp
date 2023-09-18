@@ -11,12 +11,13 @@ std::string PATH = "./config/base.json";
 
 const int RESOLITION = 800;
 std::string NAME = "lego";
-std::string DATA_PATH = "./data/nerf_synthetic/" + NAME + "/";
+std::string DATA_PATH;
 
 int main(int argc, char* argv[]){
     if (argc > 1){
         NAME = argv[1];
     }
+    DATA_PATH = "./data/nerf_synthetic/" + NAME + "/";
 
     nlohmann::json configs, camera_configs;
     

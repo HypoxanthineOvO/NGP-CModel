@@ -33,9 +33,7 @@ def resize(path):
     return cv.resize(image, (800, 800),interpolation = cv.INTER_AREA)
 # ./data/nerf_synthetic/lego/test/r_0.png -> Lego_Ref
 
-print(f'C Model PSNR: \t{round(PSNR_ip(resize("./Output.png"), "./data/nerf_synthetic/lego/test/r_0.png"), 4)}')
-#Show_Diff("./Output.png", "./data/nerf_synthetic/lego/test/r_0.png")
-print(f'PSNR Of Python Output: \t{round(PSNR_ip(resize("./Example/Lego_Python.png"), "./data/nerf_synthetic/lego/test/r_0.png"), 4)}')
-#Show_Diff("./Example/Lego_NGP.png", "./data/nerf_synthetic/lego/test/r_0.png", "Diff_NGP")
-#Show_Diff("./Output.png", "./Example/Lego_NGP.png", "Diff_With_NGP")
-print(f'PSNR Of Instant-NGP : \t{round(PSNR("./Example/Lego_NGP.png", "./data/nerf_synthetic/lego/test/r_0.png"), 4)}')
+if __name__ == "__main__":
+    name = "chair"
+    print(f'PSNR: \t{round(PSNR_ip(resize("./Output.png"), f"./data/nerf_synthetic/{name}/test/r_0.png"), 4)}')
+    Show_Diff("./Output.png", f"./data/nerf_synthetic/{name}/test/r_0.png", f"Diff_{name}")

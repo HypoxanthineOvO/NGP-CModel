@@ -11,11 +11,11 @@ class Camera {
 public:
     Camera():img_w(800), img_h(800){}; //
     Camera(const nlohmann::json& config, std::shared_ptr<Image>& image):
-        image(image), camera_angle_x(config["camera_angle_x"]),
-        img_w(image->getResolution().x()), img_h(image->getResolution().y()){
+        image(image), img_w(image->getResolution().x()), img_h(image->getResolution().y()){
+            config["camera_angle_x"].get_to(camera_angle_x);
             auto matrix = config["frames"][0]["transform_matrix"];
             // Get Focal Length
-            focal_length = 0.5 * img_w / tan(0.5 * camera_angle_x);
+            focal_length = 0.5 * static_cast<float>(img_w) / std::tan(0.5 * camera_angle_x);
             // Init position, and direction from matrix
             Eigen::MatrixXf mat(3, 4);
             
@@ -30,7 +30,17 @@ public:
             camera_to_world = ngp_mat.block(0, 0, 3, 3);
         };
 
-    Ray generateRay(float x, float y);
+    Ray generateRay(float dx, float dy){
+        Vec3f ray_o(position(0), position(1), position(2));
+        Vec3f ray_d(
+            (((dx + 0.5) / static_cast<float>(img_h)) - 0.5) * static_cast<float>(img_h) / focal_length,
+            (((dy + 0.5) / static_cast<float>(img_w)) - 0.5) * static_cast<float>(img_w) / focal_length,
+            1.0
+        );
+        ray_d = camera_to_world * ray_d;
+        ray_d = ray_d / ray_d.norm();
+        return Ray(ray_o, ray_d, 0.6f, 2.0f);
+    }
     
 
 
