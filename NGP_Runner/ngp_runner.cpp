@@ -2,6 +2,7 @@
 #include <iostream>
 #include <fstream>
 #include "nlohmann/json.hpp"
+#include "omp.h"
 
 void NGP_Runner::run() {
     Vec2i resolution = camera->getImage()->getResolution();
@@ -11,6 +12,7 @@ void NGP_Runner::run() {
         for(int dx = 0; dx < resolution.x(); dx++){
             #pragma omp atomic
             printf("\r%.02f%%",  static_cast<float>(100 * cnt / tot_pixel));
+            
             ++cnt;
             NGP_Runner::Color color(0, 0, 0);
             float dx_f = static_cast<float>(dx), dy_f = static_cast<float>(dy);

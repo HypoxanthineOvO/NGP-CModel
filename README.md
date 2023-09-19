@@ -20,7 +20,14 @@ Run `xmake` to build the project. You may need install some package by input `y`
 
 Then, Run `./Instant-NGP` to run the project.
 
-## TODO List
-- [x] Implement an easy data transfer to support `.msgpack` loading.
-- [x] Implement an json & msgpack loader.
-- [ ] Implement an original json loading support.
+## Quality (PSNR)
+> Evaluate in NeRF-Synthetic Dataset
+- Avg: 34.33
+  - chair: 35.76
+  - drums: 28.89
+  - ficus: 33.97
+  - hotdog: 39.00
+  - lego: 33.16
+  - materials: 33.14
+  - mic: 37.73
+  - ship: 32.97

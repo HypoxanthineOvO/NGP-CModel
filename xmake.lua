@@ -12,6 +12,7 @@ target("Utils")
     set_kind("static")
     add_packages(depends, {public = true})
     add_includedirs("Utils", {public = true})
+    add_packages("openmp", {public = true})
 
 target("NGP_Runner")
     set_kind("static")
@@ -31,7 +32,8 @@ target("NGP_Runner")
         "Modules/SHEncoding/*.cpp",
         "NGP_Runner/*.cpp"
     })
-    add_deps("Utils")
+    add_deps("Utils") 
+    
 
 target("Instant-NGP")
     add_deps("NGP_Runner")

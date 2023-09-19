@@ -10,10 +10,10 @@ static const float SCALE = 0.33;
 class Camera {
 public:
     Camera():img_w(800), img_h(800){}; //
-    Camera(const nlohmann::json& config, std::shared_ptr<Image>& image):
+    Camera(const nlohmann::json& config, std::shared_ptr<Image>& image, int Test_ID = 0):
         image(image), img_w(image->getResolution().x()), img_h(image->getResolution().y()){
             config["camera_angle_x"].get_to(camera_angle_x);
-            auto matrix = config["frames"][0]["transform_matrix"];
+            auto matrix = config["frames"][Test_ID]["transform_matrix"];
             // Get Focal Length
             focal_length = 0.5 * static_cast<float>(img_w) / std::tan(0.5 * camera_angle_x);
             // Init position, and direction from matrix

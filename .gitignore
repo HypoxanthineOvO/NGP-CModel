@@ -13,6 +13,9 @@ Output.png
 build/*
 *.cpython
 
+Test_Results/*
+*.py
+
 # Prerequisites
 *.d
 

@@ -9,15 +9,23 @@
 
 std::string PATH = "./config/base.json";
 
-const int RESOLITION = 800;
+int RESOLITION = 800;
 std::string NAME = "lego";
 std::string DATA_PATH;
+int ID = 0;
 
 int main(int argc, char* argv[]){
     if (argc > 1){
         NAME = argv[1];
     }
-    DATA_PATH = "./data/nerf_synthetic/" + NAME + "/" + "transforms_test.json";
+    if (argc > 2){
+        RESOLITION = std::stoi(argv[2]);
+    }
+    if (argc > 3){
+        ID = std::stoi(argv[3]);
+    }
+
+    std::cout << "Running Scene " << NAME << std::endl;
 
     nlohmann::json configs, camera_configs;
     
@@ -27,22 +35,21 @@ int main(int argc, char* argv[]){
     fin >> configs;
     fin.close();
 
-
+    DATA_PATH = "./data/nerf_synthetic/" + NAME + "/" + "transforms_test.json";
     fin.open(DATA_PATH);
-    std::cout << "Reading Camera Config From " << std::endl;
     fin >> camera_configs;
     fin.close();
 
     
     /* Generate Camera and Image */
+    std::cout << "Initializing..." << std::endl;
     std::shared_ptr<Image> img = 
         std::make_shared<Image>(RESOLITION, RESOLITION);
     std::shared_ptr<Camera> camera =
         std::make_shared<Camera>(
-            camera_configs, img
+            camera_configs, img, ID
         );
 
-    
     /* Generate NGP Runner */
     std::shared_ptr<OccupancyGrid> ocgrid =
         std::make_shared<OccupancyGrid>(
@@ -73,8 +80,10 @@ int main(int argc, char* argv[]){
     );
     ngp_runner.loadParameters("./snapshots/BigData/" + NAME + ".msgpack");
 
+    std::cout << "Running..." << std::endl;
     /* Run Instant NGP */
     ngp_runner.run();
     /* Write Image */
     ngp_runner.writeImage();
+    std::cout << "Done!" << std::endl;
 }
