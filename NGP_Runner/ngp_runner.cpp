@@ -30,7 +30,7 @@ NGP_Runner::Color NGP_Runner::ray_marching(const Ray& ray, float rand_offset) {
     float opacity = 0.0f;
     float t0 = ray.getTMin() + rand_offset, t1 = ray.getTMax();
     
-    float t = t0; //get_initial_t(ray);
+    float t = get_initial_t(ray);
     if (t < -1e4) return color;
 
     while(t < t1){

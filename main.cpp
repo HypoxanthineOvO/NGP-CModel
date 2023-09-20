@@ -78,11 +78,16 @@ int main(int argc, char* argv[]){
     NGP_Runner ngp_runner(
         camera, ocgrid, sigma_mlp, color_mlp, hashenc, shenc
     );
-    ngp_runner.loadParameters("./snapshots/BigData/" + NAME + ".msgpack");
+    ngp_runner.loadParameters("./snapshots/BaseData/" + NAME + ".msgpack");
+    //std::cout << "Load msgpack from " << "./snapshots/BaseData/" + NAME + ".msgpack" << std::endl;
 
     std::cout << "Running..." << std::endl;
     /* Run Instant NGP */
+    auto begin = std::chrono::high_resolution_clock::now();
     ngp_runner.run();
+    auto end = std::chrono::high_resolution_clock::now();
+    auto elapsed = std::chrono::duration_cast<std::chrono::nanoseconds>(end - begin);
+    printf("Time Used: %.4f sec\n", elapsed.count() * 1e-9);
     /* Write Image */
     ngp_runner.writeImage();
     std::cout << "Done!" << std::endl;
