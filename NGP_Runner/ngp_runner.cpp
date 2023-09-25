@@ -103,6 +103,11 @@ void NGP_Runner::loadParameters(std::string path){
     std::vector<float> sig_mlp_params(size_hashnet), color_mlp_params(size_rgbnet),
         hashgrid_params(size_hashgrid);
     int num_of_params = params.size();
+
+    if (num_of_params / 2 != (size_hashgrid + size_hashnet + size_rgbnet)){
+        std::cout << "Mismatched Snapshot and Config!" << std::endl;
+        exit(1);
+    }
     for(int i = 0; i < num_of_params; i += 2){
         uint32_t value = params[i] | (params[i + 1] << 8);
         int index = i / 2;
