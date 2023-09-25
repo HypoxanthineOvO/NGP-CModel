@@ -108,6 +108,7 @@ void NGP_Runner::loadParameters(std::string path){
         std::cout << "Mismatched Snapshot and Config!" << std::endl;
         exit(1);
     }
+    
     for(int i = 0; i < num_of_params; i += 2){
         uint32_t value = params[i] | (params[i + 1] << 8);
         int index = i / 2;
