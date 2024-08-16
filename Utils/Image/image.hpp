@@ -20,6 +20,9 @@ public:
     [[nodiscard]] Vec2i getResolution() const{
         return resolution;
     };
+    [[nodiscard]] Color getPixel(int x, int y) const{
+        return data[x + resolution.x() * y];
+    }
     void setPixel(int x, int y, const Vec3f& value){
         data[x + resolution.x() * y] = value;
     }

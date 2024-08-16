@@ -48,3 +48,6 @@ Test_Results/*
 *.exe
 *.out
 *.app
+
+*Results*
+DATA*

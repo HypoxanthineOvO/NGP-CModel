@@ -4,7 +4,7 @@
 #include <string>
 
 #include "image.hpp"
-#include "ngp_runner.hpp"
+#include "pcaccnr_runner.hpp"
 #include "omp.h"
 
 std::string PATH = "./config/base.json";
@@ -12,6 +12,7 @@ std::string PATH = "./config/base.json";
 int RESOLITION = 800;
 std::string NAME = "lego";
 std::string DATA_PATH;
+std::string DEPTH_NAME = ".txt";
 int ID = 0;
 
 int main(int argc, char* argv[]){
@@ -23,6 +24,9 @@ int main(int argc, char* argv[]){
     }
     if (argc > 3){
         ID = std::stoi(argv[3]);
+    }
+    if (argc > 4) {
+        DEPTH_NAME = argv[4];
     }
     Eigen::initParallel();
     omp_set_num_threads(24);
@@ -77,28 +81,21 @@ int main(int argc, char* argv[]){
             configs.at("dir_encoding").at("nested")[0]
         );
     // NGP Runner
-    NGP_Runner ngp_runner(
+    PCAccNR_Runner pcaccnr_runner(
         camera, ocgrid, sigma_mlp, color_mlp, hashenc, shenc
     );
-    ngp_runner.loadParameters("./snapshots/Hash19_Float/" + NAME + ".msgpack");
-    //std::cout << "Load msgpack from " << "./snapshots/BaseData/" + NAME + ".msgpack" << std::endl;
+    pcaccnr_runner.loadParameters("./snapshots/TotalData/" + NAME + ".msgpack");
+    pcaccnr_runner.loadNearAndFar("./near" + DEPTH_NAME, "./far" + DEPTH_NAME);
 
     std::cout << "Running..." << std::endl;
     /* Run Instant NGP */
-    //auto begin = std::chrono::high_resolution_clock::now();
-    ngp_runner.run();
-    //auto end = std::chrono::high_resolution_clock::now();
-    //auto elapsed = std::chrono::duration_cast<std::chrono::nanoseconds>(end - begin);
-    //printf("Time Used: %.4f sec\n", elapsed.count() * 1e-9);
-
-    /* Profiler */
-    //ngp_runner.Profiling();
+    // auto begin = std::chrono::high_resolution_clock::now();
+    pcaccnr_runner.run();
+    // auto end = std::chrono::high_resolution_clock::now();
+    // auto elapsed = std::chrono::duration_cast<std::chrono::nanoseconds>(end - begin);
+    // printf("Time Used: %.4f sec\n", elapsed.count() * 1e-9);
 
     /* Write Image */
-    ngp_runner.writeImage();
-    // ngp_runner.save_near_and_far();
-    ngp_runner.Profiling();
-    
-    ngp_runner.save_counter();
+    pcaccnr_runner.writeImage();
     std::cout << "Done!" << std::endl;
 }

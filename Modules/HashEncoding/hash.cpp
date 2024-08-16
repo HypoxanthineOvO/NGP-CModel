@@ -25,7 +25,9 @@ void HashEncoding::loadParameters(const std::vector<float>& params){
         for(int num_feature_pairs = 0; num_feature_pairs < sizes[level]; num_feature_pairs++){
             VecXf feat(n_feature_per_level);
             for(int feat_cnt = 0; feat_cnt < n_feature_per_level; feat_cnt++){
-                feat(feat_cnt) = params[idx];
+                float p = params[idx];
+                //if(std::abs(p) < 1e-2) p = 0.0f;
+                feat(feat_cnt) = p;
                 idx++;
             }
             layers[level]->loadParameters(

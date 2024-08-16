@@ -23,7 +23,6 @@ using Mat3i = Eigen::Matrix3i;
 using Mat4f = Eigen::Matrix4f;
 using Mat4i = Eigen::Matrix4i;
 
-using VecXf = Eigen::VectorXf;
 using MatXf = Eigen::MatrixXf;
 
 
