@@ -24,7 +24,7 @@ using Mat4f = Eigen::Matrix4f;
 using Mat4i = Eigen::Matrix4i;
 
 using MatXf = Eigen::MatrixXf;
-
+using VecXf = Eigen::VectorXf;
 
 // Basic Constants
 constexpr float PI = 3.14159265358979323846f;
