@@ -97,7 +97,7 @@ int main(int argc, char* argv[]){
     /* Write Image */
     ngp_runner.writeImage();
     // ngp_runner.save_near_and_far();
-    ngp_runner.Profiling();
+    // ngp_runner.Profiling();
     
     ngp_runner.save_counter();
     std::cout << "Done!" << std::endl;
